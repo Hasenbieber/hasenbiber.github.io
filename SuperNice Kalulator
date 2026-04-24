@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperNice Preiskalkulator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#2B4C8C;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:0}
+.app{background:#2B4C8C;color:#F5EDCC;min-height:100vh}
+.header{background:#1e3a6e;padding:1.25rem 1.25rem 1rem;border-bottom:0.5px solid #F51B8F44}
+.header-top{display:flex;align-items:center;gap:12px}
+.logo{width:38px;height:38px;border-radius:10px;background:#F51B8F22;border:0.5px solid #F51B8F88;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:#F51B8F}
+.brand{font-size:17px;font-weight:500;color:#F5EDCC}
+.brand-sub{font-size:10px;letter-spacing:0.12em;color:#F4A42999;margin-top:2px}
+.body{padding:1.25rem;max-width:500px;margin:0 auto}
+.card{background:#1e3a6e;border-radius:16px;border:0.5px solid #F5EDCC22;padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:10px;letter-spacing:0.1em;color:#F4A429;font-weight:500;margin-bottom:1rem}
+.time-big{font-size:42px;font-weight:500;color:#F5EDCC;letter-spacing:-0.02em;margin-bottom:1rem;line-height:1}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(to right,#F51B8F var(--pct,33%),#F5EDCC33 var(--pct,33%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#F5EDCC;cursor:pointer;border:2.5px solid #F51B8F}
+.slider-labels{display:flex;justify-content:space-between;margin-top:8px}
+.slider-labels span{font-size:11px;color:#F5EDCC55}
+.field-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid #F5EDCC15}
+.field-row:last-child{border-bottom:none}
+.field-label{font-size:15px;color:#F5EDCCcc}
+.field-right{display:flex;align-items:center;gap:6px}
+.field-right input{width:80px;padding:8px 10px;background:#2B4C8C;border:0.5px solid #F5EDCC33;border-radius:8px;color:#F5EDCC;font-size:16px;text-align:right;-webkit-appearance:none}
+.field-right input:focus{outline:none;border-color:#F51B8F}
+.field-unit{font-size:13px;color:#F5EDCC44;width:18px}
+.toggle-card{background:#1e3a6e;border-radius:16px;border:0.5px solid #F5EDCC22;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s,border-color 0.2s;-webkit-tap-highlight-color:transparent}
+.toggle-card.active{border-color:#F51B8F66;background:#F51B8F18}
+.toggle-title{font-size:15px;color:#F5EDCC;font-weight:500}
+.toggle-sub{font-size:12px;color:#F5EDCC44;margin-top:2px;transition:color 0.2s}
+.toggle-sub.on{color:#F51B8Faa}
+.switch{width:48px;height:28px;background:#F5EDCC22;border-radius:14px;position:relative;transition:background 0.2s;flex-shrink:0}
+.switch.on{background:#F51B8F}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#F5EDCC;transition:transform 0.2s}
+.switch.on::after{transform:translateX(20px)}
+.price-card{background:#1e3a6e;border-radius:20px;border:0.5px solid #F4A42966;padding:2rem 1.25rem;text-align:center;margin-bottom:1rem}
+.price-label{font-size:10px;letter-spacing:0.12em;color:#F4A429cc;margin-bottom:14px}
+.price-row{display:flex;align-items:baseline;justify-content:center;gap:4px}
+.price-euro{font-size:28px;color:#F4A429;font-weight:400}
+.price-amount{font-size:72px;font-weight:500;color:#F5EDCC;line-height:1;letter-spacing:-0.03em}
+.price-incl{font-size:12px;color:#F5EDCC44;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">SN</div>
+      <div>
+        <div class="brand">SuperNice</div>
+        <div class="brand-sub">PREISKALKULATOR</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <div class="card">
+      <div class="card-title">GESAMTDAUER DER BEHANDLUNG</div>
+      <div class="time-big" id="time-display">2h 30min</div>
+      <input type="range" id="time-slider" min="2" max="24" step="1" value="10">
+      <div class="slider-labels">
+        <span>30 min</span>
+        <span>3h</span>
+        <span>6h</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MATERIALVERBRAUCH</div>
+      <div class="field-row">
+        <span class="field-label">Blondierung</span>
+        <div class="field-right">
+          <input type="number" id="blond-g" value="30" min="0" max="800" step="5">
+          <span class="field-unit">g</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Oxidant Blondierung</span>
+        <div class="field-right">
+          <input type="number" id="ox-blond-ml" value="30" min="0" max="1000" step="5">
+          <span class="field-unit">ml</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Glossing</span>
+        <div class="field-right">
+          <input type="number" id="gloss-g" value="30" min="0" max="200" step="5">
+          <span class="field-unit">g</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Oxidant Glossing</span>
+        <div class="field-right">
+          <input type="number" id="ox-gloss-ml" value="60" min="0" max="1000" step="5">
+          <span class="field-unit">ml</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Folie</span>
+        <div class="field-right">
+          <input type="number" id="folie-m" value="5" min="0" max="100" step="0.5">
+          <span class="field-unit">m</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="toggle-card" id="toggle-schnitt" onclick="toggleSchnitt()">
+      <div>
+        <div class="toggle-title">Kein Schnitt — nur Styling</div>
+        <div class="toggle-sub" id="sub-schnitt">− 33 € brutto</div>
+      </div>
+      <div class="switch" id="sw-schnitt"></div>
+    </div>
+
+    <div class="price-card">
+      <div class="price-label">PREIS FÜR DIE KUNDIN</div>
+      <div class="price-row">
+        <span class="price-amount" id="brutto-price">–</span>
+        <span class="price-euro"> €</span>
+      </div>
+      <div class="price-incl" id="price-sub">inkl. MwSt.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const QA=7.4603,QB=74.9720,QC=-9.3762;
+const BLOND_PKG=35/800,OX_PKG=7/1000,GLOSS_PKG=6/60,FOLIE_PKG=20/100;
+const PAUSCHALE=11.83,ENERGIE=1.07,UST=1.19,KEIN_SCHNITT=33;
+let nurStyling=false;
+
+function toggleSchnitt(){
+  nurStyling=!nurStyling;
+  document.getElementById('sw-schnitt').classList.toggle('on',nurStyling);
+  document.getElementById('toggle-schnitt').classList.toggle('active',nurStyling);
+  const sub=document.getElementById('sub-schnitt');
+  sub.classList.toggle('on',nurStyling);
+  sub.textContent=nurStyling?'− 33 € aktiv':'− 33 € brutto';
+  calc();
+}
+
+function getStunden(){return parseInt(document.getElementById('time-slider').value)*0.25;}
+
+function formatTime(h){
+  const m=Math.round(h*60),hh=Math.floor(m/60),mm=m%60;
+  if(hh===0)return mm+'min';
+  if(mm===0)return hh+'h';
+  return hh+'h '+String(mm).padStart(2,'0')+'min';
+}
+
+function getVal(id){return parseFloat(document.getElementById(id).value)||0;}
+
+function updateTrack(){
+  const sl=document.getElementById('time-slider');
+  const pct=((sl.value-sl.min)/(sl.max-sl.min)*100).toFixed(1)+'%';
+  sl.style.setProperty('--pct',pct);
+}
+
+function calc(){
+  const h=getStunden();
+  document.getElementById('time-display').textContent=formatTime(h);
+  updateTrack();
+  const zeitkosten=QA*h*h+QB*h+QC;
+  const matVar=getVal('blond-g')*BLOND_PKG+getVal('ox-blond-ml')*OX_PKG+getVal('gloss-g')*GLOSS_PKG+getVal('ox-gloss-ml')*OX_PKG+getVal('folie-m')*FOLIE_PKG;
+  const matGesamt=(matVar+PAUSCHALE)*ENERGIE;
+  const netto=zeitkosten+matGesamt;
+  let brutto=Math.round(netto*UST);
+  if(nurStyling)brutto-=KEIN_SCHNITT;
+  document.getElementById('brutto-price').textContent=brutto.toLocaleString('de-DE');
+  document.getElementById('price-sub').textContent='inkl. MwSt.';
+}
+
+document.getElementById('time-slider').addEventListener('input',calc);
+['blond-g','ox-blond-ml','gloss-g','ox-gloss-ml','folie-m'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+</body>
+</html>
